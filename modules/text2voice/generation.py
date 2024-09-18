@@ -1,6 +1,7 @@
 
 import os
 import langid
+import json
 
 import gradio as gr
 from pathlib import Path
@@ -728,4 +729,182 @@ enable_waveform.change(
     fn=switch_waveform,
     inputs=[enable_waveform, video_gr],
     outputs=[video_gr]
+)
+
+def save_parameters_to_file(
+        enhance_resemble_chunk_seconds,
+        enhance_resemble_chunk_overlap,
+        enhance_resemble_solver,
+        enhance_resemble_num_funcs,
+        enhance_resemble_temperature,
+        enhance_resemble_denoise,
+        rvc_settings_model_path,
+        rvc_settings_index_path,
+        rvc_settings_model_name,
+        rvc_settings_pitch,
+        rvc_settings_index_rate,
+        rvc_settings_protect_voiceless,
+        rvc_settings_method,
+        rvc_settings_filter_radius,
+        rvc_settings_resemple_rate,
+        rvc_settings_envelope_mix,
+        opvoice_ref_list,
+        batch_generation,
+        batch_generation_path,
+        speaker_ref_wavs,
+        batch_sub_generation,
+        batch_sub_generation_path,
+        sync_sub_generation,
+        language_auto_detect,
+        enable_waveform,
+        improve_output_audio,
+        improve_output_resemble,
+        improve_output_voice2voice,
+        output_type,
+        text,
+        languages,
+        speaker_value_text,
+        speaker_path_text,
+        additional_text_input,
+        temperature,
+        length_penalty,
+        repetition_penalty,
+        top_k,
+        top_p,
+        speed,
+        sentence_split,
+        status_bar):
+
+    # Create the parameter dictionary
+    params = {
+        # Resemble enhance Settings
+        "enhance_resemble_chunk_seconds": enhance_resemble_chunk_seconds,
+        "enhance_resemble_chunk_overlap": enhance_resemble_chunk_overlap,
+        "enhance_resemble_solver": enhance_resemble_solver,
+        "enhance_resemble_num_funcs": enhance_resemble_num_funcs,
+        "enhance_resemble_temperature": enhance_resemble_temperature,
+        "enhance_resemble_denoise": enhance_resemble_denoise,
+
+        # RVC settings
+        "rvc_settings_model_path": rvc_settings_model_path,
+        "rvc_settings_index_path": rvc_settings_index_path,
+        "rvc_settings_model_name": rvc_settings_model_name,
+        "rvc_settings_pitch": rvc_settings_pitch,
+        "rvc_settings_index_rate": rvc_settings_index_rate,
+        "rvc_settings_protect_voiceless": rvc_settings_protect_voiceless,
+        "rvc_settings_method": rvc_settings_method,
+        "rvc_settings_filter_radius": rvc_settings_filter_radius,
+        "rvc_settings_resemple_rate": rvc_settings_resemple_rate,
+        "rvc_settings_envelope_mix": rvc_settings_envelope_mix,
+
+        # OpenVoice settings
+        "opvoice_ref_list": opvoice_ref_list,
+
+        # Batch generation settings
+        "batch_generation": batch_generation,
+        "batch_generation_path": batch_generation_path,
+        "speaker_ref_wavs": speaker_ref_wavs,
+
+        # Batch Subtitles settings
+        "batch_sub_generation": batch_sub_generation,
+        "batch_sub_generation_path": batch_sub_generation_path,
+        "sync_sub_generation": sync_sub_generation,
+
+        # Features
+        "language_auto_detect": language_auto_detect,
+        "enable_waveform": enable_waveform,
+        "improve_output_audio": improve_output_audio,
+        "improve_output_resemble": improve_output_resemble,
+        "improve_output_voice2voice": improve_output_voice2voice,
+
+        # Default settings
+        "output_type": output_type,
+        "text": text,
+        "languages": languages,
+
+        # Help variables
+        "speaker_value_text": speaker_value_text,
+        "speaker_path_text": speaker_path_text,
+        "additional_text_input": additional_text_input,
+
+        # TTS settings
+        "temperature": temperature,
+        "length_penalty": length_penalty,
+        "repetition_penalty": repetition_penalty,
+        "top_k": top_k,
+        "top_p": top_p,
+        "speed": speed,
+        "sentence_split": sentence_split,
+
+        # STATUS
+        "status_bar": status_bar
+    }
+
+    # Convert parameters to JSON string
+    params_json = json.dumps(params, indent=4)
+    
+    # Save parameters to file and return file path for download
+    with open("api_params.json", "w") as f:
+        f.write(params_json)
+
+    # Return the file path for download
+    return "api_params.json"
+
+get_current_params_btn.click(
+    fn = save_parameters_to_file,
+    inputs=[
+        # Resemble enhance Settings
+        enhance_resemble_chunk_seconds,
+        enhance_resemble_chunk_overlap,
+        enhance_resemble_solver,
+        enhance_resemble_num_funcs,
+        enhance_resemble_temperature,
+        enhance_resemble_denoise,
+        # RVC settings
+        rvc_settings_model_path,
+        rvc_settings_index_path,
+        rvc_settings_model_name,
+        rvc_settings_pitch,
+        rvc_settings_index_rate,
+        rvc_settings_protect_voiceless,
+        rvc_settings_method,
+        rvc_settings_filter_radius,
+        rvc_settings_resemple_rate,
+        rvc_settings_envelope_mix,
+        # OpenVoice Setting
+        opvoice_ref_list,
+        # Batch
+        batch_generation,
+        batch_generation_path,
+        speaker_ref_wavs,
+        # Batch Subtitles
+        batch_sub_generation,
+        batch_sub_generation_path,
+        sync_sub_generation,
+        # Features
+        language_auto_detect,
+        enable_waveform,
+        improve_output_audio,
+        improve_output_resemble,
+        improve_output_voice2voice,
+        #  Default settings
+        output_type,
+        text,
+        languages,
+        # Help variables
+        speaker_value_text,
+        speaker_path_text,
+        additional_text_input,
+        # TTS settings
+        temperature,
+        length_penalty,
+        repetition_penalty,
+        top_k,
+        top_p,
+        speed,
+        sentence_split,
+        # STATUS
+        status_bar
+    ],
+    outputs=download_file
 )

@@ -79,6 +79,10 @@ with gr.Blocks(css=css) as demo:
         )
         refresh_model_btn = gr.Button(
             value=i18n("Update"), elem_classes="model-choose__btn")
+        get_current_params_btn = gr.Button(
+            value="Get current params", elem_classes="model-choose__btn")
+        download_file = gr.File(label="Download JSON")
+
 
     with gr.Tab(i18n("Text2Voice")):
         from parts.text2voice import *

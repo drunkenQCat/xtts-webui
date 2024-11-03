@@ -271,7 +271,6 @@ translate_show_ref_speaker_from_list.change(fn=switch_speaker_example_visibility
                                   outputs=[translate_ref_speaker_example])
 
 # REFERENCE SINGLE UPLOAD OR MICROPHONE
-manual_resemble_button.click(resemble_audio_manually, inputs=ref_path, outputs=output_text)
 manual_resemble_enhance_button.click(resemble_enhance_manually, inputs=[
     resemble_audio_path,
     # Resemble enhance Settings

@@ -75,6 +75,47 @@ def clear_current_speaker_audio(ref_speaker_audio, speaker_path_text, ref_speake
     return "", speaker_value, gr.Dropdown(label="Reference Speaker from folder 'speakers'", value=speaker_value, choices=speakers_list), gr.Button(visible=False)
 
 
+def get_path_from_list(ref_speaker_list):
+    if not isinstance(ref_speaker_list, list) and isinstance(ref_speaker_list, str):
+        return ref_speaker_list
+    if len(ref_speaker_list) == 0:
+        return None
+    for ref in ref_speaker_list:
+        if ref is not None and ref!= "":
+            return ref
+def resemble_audio_manually(the_ref_path):
+    # print(111111111111111111111111111111, the_ref_path)
+    resemble_audio_path = resemble_enhance_audio(the_ref_path, use_enhance=True, denoising=True)[1]
+    striped_audio_path = improve_ref_audio(resemble_audio_path, this_dir)
+    return striped_audio_path
+
+
+def resemble_enhance_manually(
+        audio_path,
+
+        # Resemble enhance Settings
+        enhance_resemble_chunk_seconds,
+        enhance_resemble_chunk_overlap,
+        enhance_resemble_solver,
+        enhance_resemble_num_funcs,
+        enhance_resemble_temperature,
+        enhance_resemble_denoise,
+):
+
+    resemble_enhance_settings = {
+        "chunk_seconds": enhance_resemble_chunk_seconds,
+        "chunks_overlap": enhance_resemble_chunk_overlap,
+        "solver": enhance_resemble_solver,
+        "nfe": enhance_resemble_num_funcs,
+        "tau": enhance_resemble_temperature,
+        "denoising": enhance_resemble_denoise,
+        "use_enhance": improve_output_resemble
+    }
+
+    _, resemble_path = resemble_enhance_audio(**resemble_enhance_settings, audio_path=audio_path)
+    return resemble_path
+
+
 def change_current_speaker_audio(improve_reference_resemble, improve_reference_audio, auto_cut, ref_speaker_audio, speaker_path_text, ref_speaker_list, speaker_value_text, use_resample, speaker_ref_wavs):
     #  Get audio, save it to tempo and resample it.
     output_path = ""
@@ -82,11 +123,14 @@ def change_current_speaker_audio(improve_reference_resemble, improve_reference_a
     output_path = save_audio_to_wav(rate, y, this_dir, auto_cut)
 
     if improve_reference_resemble:
+        output_path = get_path_from_list(output_path)
         output_path = resemble_enhance_audio(output_path, True)
     if use_resample:
+        output_path = get_path_from_list(output_path)
         output_path = resample_audio(output_path, this_dir)
 
     if improve_reference_audio:
+        output_path = get_path_from_list(output_path)
         output_path = improve_ref_audio(output_path, this_dir)
 
 #  Assign the invisible variables the values we will use for generation
@@ -227,6 +271,18 @@ translate_show_ref_speaker_from_list.change(fn=switch_speaker_example_visibility
                                   outputs=[translate_ref_speaker_example])
 
 # REFERENCE SINGLE UPLOAD OR MICROPHONE
+manual_resemble_button.click(resemble_audio_manually, inputs=ref_path, outputs=output_text)
+manual_resemble_enhance_button.click(resemble_enhance_manually, inputs=[
+    resemble_audio_path,
+    # Resemble enhance Settings
+    enhance_resemble_chunk_seconds,
+    enhance_resemble_chunk_overlap,
+    enhance_resemble_solver,
+    enhance_resemble_num_funcs,
+    enhance_resemble_temperature,
+    enhance_resemble_denoise,
+], outputs=resemble_output_audio)
+
 ref_speaker.stop_recording(fn=change_current_speaker_audio,
                            inputs=[improve_reference_resemble, improve_reference_audio, auto_cut, ref_speaker,
                                    speaker_path_text, speaker_value_text, ref_speaker_list, use_resample, speaker_ref_wavs],

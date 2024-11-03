@@ -227,7 +227,13 @@ with gr.Row():
             additional_text_input = gr.Textbox(
                 label=i18n("File Name Value"), value="output")
 
-           # Variables
+        with gr.Row():
+            resemble_audio_path = gr.Audio(label="resemble_audio_path", type="filepath")
+            manual_resemble_enhance_button = gr.Button("ResembleEnhance")
+        # resemble_output_text = gr.Textbox(label="ResembleOutput", interactive=False)
+        resemble_output_audio = gr.Audio(label=i18n("ResembleOutput Audio"), interactive=False, autoplay=False)
+
+        # Variables
         speaker_value_text = gr.Textbox(
             label=i18n("Reference Speaker Name"), value=speaker_value, visible=False)
         speaker_path_text = gr.Textbox(

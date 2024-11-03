@@ -20,6 +20,8 @@ import ffmpeg
 from pathlib import Path
 import shutil
 
+from parts.text2voice import *
+
 def concatenate_audios(folder_path, output_filename="result.wav"):
     # Получаем список всех .wav файлов в папке.
     print(folder_path)

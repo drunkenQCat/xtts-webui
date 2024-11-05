@@ -245,6 +245,7 @@ def generate_audio(
     # Help variables
     speaker_value_text,
     speaker_path_text,
+    my_ref_speaker,
     additional_text,
     # TTS settings
     temperature, length_penalty,
@@ -274,6 +275,12 @@ def generate_audio(
     if speaker_path_text and speaker_value_text == "reference":
         print("Using folder reference")
         ref_speaker_wav = speaker_path_text
+
+    elif my_ref_speaker and speaker_value_text == "reference":
+        print("Using Upload reference")
+        print(my_ref_speaker)
+        ref_speaker_wav = Path(my_ref_speaker).absolute()
+        ref_speaker_wav = str(ref_speaker_wav)
 
     if ref_speakers and speaker_value_text == "multi_reference":
         print("Using multiple reference")
@@ -711,6 +718,7 @@ generate_btn.click(
         # Help variables
         speaker_value_text,
         speaker_path_text,
+        my_ref_speaker,
         additional_text_input,
         # TTS settings
         temperature,

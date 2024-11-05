@@ -101,8 +101,13 @@ with gr.Row():
             label=i18n("speaker sample"), sources="upload", visible=False, interactive=False)
 
         with gr.Tab(label=i18n("Single")):
+            with gr.Row():
+                ref_path = gr.Textbox(label="Input Text", placeholder="Type something...")
+                manual_resemble_button = gr.Button("Process")
+            output_text = gr.Textbox(label="Output", interactive=False)
             ref_speaker = gr.Audio(
                 label=i18n("Reference Speaker (mp3, wav, flac)"), editable=False)
+
         with gr.Tab(label=i18n("Multiple")):
             ref_speakers = gr.Files(
                 label=i18n("Reference Speakers (mp3, wav, flac)"), file_types=["audio"])
@@ -241,3 +246,4 @@ with gr.Row():
         speaker_wav_modifyed = gr.Checkbox(
             i18n("Reference Audio"), visible=False, value=False)
         speaker_ref_wavs = gr.Text(visible=False)
+        my_ref_speaker = gr.File(label=i18n("Reference Speakers (mp3, wav, flac)"), file_types=["audio"], visible=False)
